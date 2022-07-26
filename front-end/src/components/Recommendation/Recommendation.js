@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 import ReactPlayer from "react-player";
 import { GoArrowUp, GoArrowDown } from "react-icons/go";

@@ -1,4 +1,8 @@
-import { Suspense, lazy, Component } from "react";
+/* eslint-disable react/display-name */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-shadow */
+import React, { Suspense, lazy, Component } from "react";
 import {
   BrowserRouter as Router,
   Routes,
