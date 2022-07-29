@@ -45,4 +45,63 @@ describe("recommendations unit test suite", () => {
 
   });
 
+  it("should correctly upvote a recommendation", async () => {
+    const foundRecommendation: Recommendation = {
+      id: 7,
+      name: "upvote_recommendation",
+      youtubeLink: "upvote_recommendation",
+      score: 7
+    };
+
+    jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(foundRecommendation);
+    jest.spyOn(recommendationRepository, "updateScore").mockImplementationOnce(():any => {});
+
+    await recommendationService.upvote(foundRecommendation.id);
+    expect(recommendationRepository.find).toBeCalledWith(foundRecommendation.id);
+    expect(recommendationRepository.updateScore).toBeCalledWith(foundRecommendation.id, "increment");
+  });
+
+  it("should correctly downvote a recommendation", async () => {
+    const foundRecommendation: Recommendation = {
+      id: 14,
+      name: "downvote_recommendation",
+      youtubeLink: "downvote_recommendation",
+      score: 14
+    };
+
+    jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(foundRecommendation);
+    jest.spyOn(recommendationRepository, "updateScore").mockResolvedValueOnce(foundRecommendation);
+
+    await recommendationService.downvote(foundRecommendation.id);
+    expect(recommendationRepository.find).toBeCalledWith(foundRecommendation.id);
+    expect(recommendationRepository.updateScore).toBeCalledWith(foundRecommendation.id, "decrement");
+  });
+
+  it("throws error when trying to upvote inexistent recommendation", async () => {
+    
+    jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(undefined);
+
+    const result = recommendationService.upvote(404);
+    expect(recommendationRepository.find).toBeCalledWith(404);
+    expect(result).rejects.toEqual({ type: "not_found" });
+  });
+
+  it("should downvote and remove a recommendation when score < -5", async () => {
+    const foundRecommendation: Recommendation = {
+      id: 5,
+      name: "downvote_recommendation",
+      youtubeLink: "downvote_recommendation",
+      score: -6,
+    };
+
+    jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(foundRecommendation);
+    jest.spyOn(recommendationRepository, "updateScore").mockResolvedValueOnce(foundRecommendation);
+    jest.spyOn(recommendationRepository, "remove").mockImplementationOnce((): any => {});
+
+    await recommendationService.downvote(foundRecommendation.id);
+    expect(recommendationRepository.find).toBeCalledWith(foundRecommendation.id);
+    expect(recommendationRepository.updateScore).toBeCalledWith(foundRecommendation.id, "decrement");
+    expect(recommendationRepository.remove).toBeCalledWith(foundRecommendation.id);
+  });
+
 });
