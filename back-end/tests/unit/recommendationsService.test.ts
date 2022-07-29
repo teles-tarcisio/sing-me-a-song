@@ -5,6 +5,10 @@ import { Recommendation } from "@prisma/client";
 
 jest.mock("../../src/repositories/recommendationRepository.js");
 
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
 describe("recommendations unit test suite", () => {
   it("creates a recommendation given valid data", async () => {
     jest.spyOn(recommendationRepository, "findByName").mockResolvedValueOnce(null);
@@ -166,9 +170,10 @@ describe("recommendations unit test suite", () => {
     jest.spyOn(recommendationRepository, "findAll").mockResolvedValueOnce(recommendations);
 
     await recommendationService.getRandom();
-    expect(Math.random).toBeCalledTimes(4); //2 from previous test!
+    expect(Math.random).toBeCalledTimes(2);
     expect(recommendationRepository.findAll)
     .toBeCalledWith({ score: 10, scoreFilter: "lte" }); 
   });
+
 
 });
