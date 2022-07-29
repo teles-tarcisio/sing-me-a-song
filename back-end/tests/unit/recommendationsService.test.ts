@@ -83,7 +83,7 @@ describe("recommendations unit test suite", () => {
 
     const result = recommendationService.upvote(404);
     expect(recommendationRepository.find).toBeCalledWith(404);
-    expect(result).rejects.toEqual({ type: "not_found" });
+    expect(result).rejects.toEqual({ type: "not_found", message: "" });
   });
 
   it("should downvote and remove a recommendation when score < -5", async () => {
@@ -102,6 +102,73 @@ describe("recommendations unit test suite", () => {
     expect(recommendationRepository.find).toBeCalledWith(foundRecommendation.id);
     expect(recommendationRepository.updateScore).toBeCalledWith(foundRecommendation.id, "decrement");
     expect(recommendationRepository.remove).toBeCalledWith(foundRecommendation.id);
+  });
+
+  it("should correctly call get()", async () => {
+    jest.spyOn(recommendationRepository, "findAll").mockResolvedValueOnce([]);
+
+    await recommendationService.get();
+    expect(recommendationRepository.findAll).toBeCalledTimes(1);
+  });
+
+  it("should correctly call getTop()", async () => {
+    const amount: number = 9;    
+    jest.spyOn(recommendationRepository, "getAmountByScore").mockResolvedValueOnce([]);
+
+    await recommendationService.getTop(amount);
+    expect(recommendationRepository.getAmountByScore).toBeCalledWith(amount);
+  });
+
+  it("should correctly call getRandom() for random = 0.5", async () => {
+    const fixedRandomValue: number = 0.5;
+    const recommendations: Recommendation[] = [
+      {
+        id: 1,
+        name: "1",
+        youtubeLink: "link1",
+        score: 1,
+      },
+      {
+        id: 2,
+        name: "2",
+        youtubeLink: "link2",
+        score: 2,
+      },
+    ];
+
+    jest.spyOn(Math, "random").mockReturnValue(fixedRandomValue);
+    jest.spyOn(recommendationRepository, "findAll").mockResolvedValueOnce(recommendations);
+
+    await recommendationService.getRandom();
+    expect(Math.random).toBeCalledTimes(2);
+    expect(recommendationRepository.findAll)
+    .toBeCalledWith({ score: 10, scoreFilter: "gt" }); 
+  });
+
+  it("should correctly call getRandom() for random = 0.9", async () => {
+    const fixedRandomValue: number = 0.9;
+    const recommendations: Recommendation[] = [
+      {
+        id: 1,
+        name: "1",
+        youtubeLink: "link1",
+        score: 1,
+      },
+      {
+        id: 2,
+        name: "2",
+        youtubeLink: "link2",
+        score: 2,
+      },
+    ];
+
+    jest.spyOn(Math, "random").mockReturnValue(fixedRandomValue);
+    jest.spyOn(recommendationRepository, "findAll").mockResolvedValueOnce(recommendations);
+
+    await recommendationService.getRandom();
+    expect(Math.random).toBeCalledTimes(4); //2 from previous test!
+    expect(recommendationRepository.findAll)
+    .toBeCalledWith({ score: 10, scoreFilter: "lte" }); 
   });
 
 });
