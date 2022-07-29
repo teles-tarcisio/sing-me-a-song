@@ -175,5 +175,17 @@ describe("recommendations unit test suite", () => {
     .toBeCalledWith({ score: 10, scoreFilter: "lte" }); 
   });
 
+  it("should correctly call getRandom() for random = 0.5 but without filtered recommendations", async () => {
+    const fixedRandomValue: number = 0.5;
+    
+    jest.spyOn(Math, "random").mockReturnValue(fixedRandomValue);
+    jest.spyOn(recommendationRepository, "findAll").mockResolvedValue([]);
+
+    const result = recommendationService.getRandom();
+    expect(Math.random).toBeCalledTimes(1);
+    expect(recommendationRepository.findAll).toBeCalledTimes(1);
+    expect(result).rejects.toEqual({ type: "not_found", message: "" });
+  });
+
 
 });
