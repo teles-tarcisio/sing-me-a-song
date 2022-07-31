@@ -1,5 +1,4 @@
 /// <reference types="cypress" />
-//import { faker } from "@faker-js/faker";
 
 const BASE_URL = 'http://localhost:3000';
 const API_URL = 'http://localhost:5000';
