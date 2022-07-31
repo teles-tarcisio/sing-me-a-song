@@ -30,3 +30,8 @@ Cypress.Commands.add("resetDatabase", () => {
   cy.log("resetting recommendations database");
   cy.request("POST", `${API_BASE_URL}/tests/reset-database`);
 });
+
+Cypress.Commands.add('populateDatabase', (newSong) => {
+  cy.log("populating database");
+  cy.request('POST', `${API_BASE_URL}/tests/populate-top`, newSong);
+});
