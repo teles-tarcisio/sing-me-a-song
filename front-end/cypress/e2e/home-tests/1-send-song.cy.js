@@ -1,23 +1,17 @@
 /// <reference types="cypress" />
-import { faker } from "@faker-js/faker";
+//import { faker } from "@faker-js/faker";
 
 const BASE_URL = 'http://localhost:3000';
 
-describe("/home - send a song", () => {
-  beforeEach(() => {
-    cy.resetDatabase();
-  });
-  
-  /*
-  afterEach(() => {
-    cy.resetDatabase();
-  });
-  */
+beforeEach(() => {
+  cy.resetDatabase();
+});
 
+describe("/home - send a song", () => {
   it("should succesfully send a new song", () => {
     const newSong = {
-      name: faker.random.words(4),
-      youtubeLink: `https://www.youtube.com/${faker.random.alpha(10)}`,
+      name: 'Casuarina: Ponto de Vista',
+      youtubeLink: 'https://www.youtube.com/watch?v=1dmQmMUdMt8',
     };
 
     cy.visit(BASE_URL);
