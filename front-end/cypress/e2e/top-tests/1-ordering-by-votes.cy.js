@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 /// <reference types="cypress" />
 
 const BASE_URL = 'http://localhost:3000/top';
-const API_URL = "http://localhost:5000/recommendations";
+const API_URL = 'http://localhost:5000/recommendations';
 
 const songsArray = [
   {
@@ -25,11 +26,11 @@ beforeEach(() => {
   });
 });
 
-describe("/top - test video ordering by votes", () => {
-  it("should succesfully change the recommendations order", () => {
+describe('/top - test video ordering by votes', () => {
+  it('should succesfully change the recommendations order', () => {
     cy.visit(BASE_URL);
 
-    cy.intercept("GET", `${API_URL}/top/10`).as("getTopTen");
+    cy.intercept('GET', `${API_URL}/top/10`).as('getTopTen');
     cy.wait('@getTopTen');
 
     songsArray.forEach((musicVideo) => {
@@ -41,14 +42,14 @@ describe("/top - test video ordering by votes", () => {
         .click();
     });
 
-    cy.get('article').contains('Casuarina: Ponto de Vista')
+    cy.get('article').contains(songsArray[2].name)
       .should('be.visible')
       .parent()
       .find('div:nth-child(3)')
       .find('svg:nth-child(1)')
       .click();
 
-    cy.get('article').contains('Casuarina: Ponto de Vista')
+    cy.get('article').contains(songsArray[2].name)
       .should('be.visible')
       .parent()
       .find('div:nth-child(3)')
@@ -56,6 +57,6 @@ describe("/top - test video ordering by votes", () => {
       .click();
 
     // falta "ver" se o de casuarina tá no topo
-    // cy.get('article:first').find('div:nth-child(3)').contains('3');
+    cy.get('article:first').find('div:nth-child(3)').contains('3');
   });
 });

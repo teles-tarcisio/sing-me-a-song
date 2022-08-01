@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /// <reference types="cypress" />
 
 const BASE_URL = 'http://localhost:3000';
@@ -12,23 +13,24 @@ beforeEach(() => {
   cy.resetDatabase();
 });
 
-describe("/home - downvote a video", () => {
-  it("should succesfully downvote a video", () => {
+describe('/home - downvote a video', () => {
+  it('should succesfully downvote a video', () => {
     cy.visit(BASE_URL);
-    cy.request("POST", `${API_URL}/recommendations`, newSong).then((response) => {
+    cy.request('POST', `${API_URL}/recommendations`, newSong).then((response) => {
+      // eslint-disable-next-line no-console
       console.log(response.body, response.status);
     });
 
-    cy.intercept("GET", `${API_URL}/recommendations`).as("getRecommendations");
-    cy.wait("@getRecommendations");
+    cy.intercept('GET', `${API_URL}/recommendations`).as('getRecommendations');
+    cy.wait('@getRecommendations');
 
-    cy.get("article").contains(newSong.name)
-      .should("be.visible")
+    cy.get('article').contains(newSong.name)
+      .should('be.visible')
       .parent()
-      .find("div:nth-child(3)")
-      .contains("0");
+      .find('div:nth-child(3)')
+      .contains('0');
 
-    cy.get("article").contains(newSong.name)
+    cy.get('article').contains(newSong.name)
       .should('be.visible')
       .parent()
       .find('div:nth-child(3)')
